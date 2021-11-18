@@ -1,0 +1,26 @@
+
+
+[package]
+name = "mekorifa"
+version = "0.0.0"
+authors = ["Ciprian Dorin Craciun <ciprian@volution.ro>"]
+edition = "2018"
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
+
+
+[[bin]]
+name = "mekorifa"
+path = "./bin.rs"
+
+
+[lib]
+name = "mekorifa"
+path = "./lib.rs"
+
+
+[features]
+default = []
+
