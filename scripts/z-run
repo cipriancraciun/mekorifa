@@ -1,0 +1,90 @@
+#!/dev/null
+
+
+
+
+::// debug / ...
+::// release / ...
+::// docs / ...
+::// cargo / ...
+::// workspace / ...
+::// *
+
+
+
+
+:: debug / build / bin :: exec -- "${ZRUN[@]}" ':: cargo / tool' build --bin mekorifa -- "${@}"
+:: release / build / bin :: exec -- "${ZRUN[@]}" ':: cargo / tool' build --bin mekorifa --release -- "${@}"
+
+
+:: docs / crate / internals / build :: exec -- "${ZRUN[@]}" ':: cargo / tool' doc --lib --no-deps --document-private-items "${@}"
+:: docs / crate / exports / build :: exec -- "${ZRUN[@]}" ':: cargo / tool' doc --lib --no-deps "${@}"
+:: docs / dependencies / build :: exec -- "${ZRUN[@]}" ':: cargo / tool' doc --lib "${@}"
+
+
+
+
+:: cargo / debug / build :: exec -- "${ZRUN[@]}" ':: cargo / tool' build "${@}"
+:: cargo / release / build :: exec -- "${ZRUN[@]}" ':: cargo / tool' build --release "${@}"
+
+:: cargo / dependencies / update :: exec -- "${ZRUN[@]}" ':: cargo / tool' update --aggressive "${@}"
+
+
+<< cargo / tool
+	test "${#}" -ge 1
+	_outputs="$( exec -- readlink -e -- ./.outputs )"
+	_sources="$( exec -- readlink -e -- ./sources )"
+	
+	export -- CARGO_TARGET_DIR="${_outputs}/target"
+	
+	cd -- "${_sources}"
+	
+	exec -- cargo "${@}"
+!!
+
+
+
+
+<< workspace / initialize / rust
+	test "${#}" -eq 0
+	_outputs="$( exec -- readlink -e -- ./.outputs )"
+	_sources="$( exec -- readlink -e -- ./sources )"
+	
+	_target="${_outputs}/target"
+	_release="${_outputs}/release"
+	_debug="${_outputs}/debug"
+	
+	for _folder in "${_target}" "${_release}" "${_debug}" ; do
+		if test ! -e "${_folder}" ; then
+			mkdir -- "${_folder}"
+		fi
+	done
+	
+	ln -s -T -f -- ../release "${_target}/release"
+	ln -s -T -f -- ../debug "${_target}/debug"
+	
+	ln -s -T -f -- ./release/mekorifa "${_outputs}/mekorifa--release"
+	ln -s -T -f -- ./debug/mekorifa "${_outputs}/mekorifa--debug"
+!!
+
+
+<< workspace / initialize / outputs
+	test "${#}" -eq 0
+	if test ! -d ./.outputs ; then
+		_outputs_store="${TMPDIR:-/tmp}/mekorifa--${UID}--${RANDOM}-${RANDOM}-${RANDOM}-${RANDOM}"
+		mkdir -- "${_outputs_store}"
+		_outputs_store="$( exec -- readlink -e -- "${_outputs_store}" )"
+		ln -s -f -T -- "${_outputs_store}" ./.outputs
+	fi
+!!
+
+
+
+
+<< do
+	if test "${__cargo_build:-true}" == true ; then
+		"${ZRUN[@]}" ':: debug / build / bin'
+	fi
+	exec -- ./.outputs/mekorifa--debug "${@}"
+!!
+
