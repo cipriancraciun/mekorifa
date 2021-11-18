@@ -1,0 +1,13 @@
+
+.*
+!.gitignore
+
+/sources/target
+
+*~
+*#
+*.bak
+
+*.log
+*.tmp
+
