@@ -354,6 +354,21 @@ envelope_checksum = blake3_envelope_hash
   However, given each authenticator or checksum includes a 512 bit token specific for that version,
   such a downgrade attack would not be possible, unless there is a bug in the tool itself.
 
+* ChaCha20 key and nonce reuse -- mitigated
+
+  Given we use `scrypt` to derive all other cryptographic key material,
+  including the ChaCha20 key and nonce,
+  it is important that the `scrypt` salt is unique (at least when used with the same password).
+  Else, an attacker wanting to find a high-value secret,
+  might trick the user when creating another token to reuse the same salt (and presumaly the same password),
+  in which case a simple XOR between the ciphertext of the two tokens would yield the XOR between the two plaintexts.
+  (Worse, if the attacker knows the second plaintext, it can easily recover the high-value secret.)
+
+  I say this attack is mitigated because the tool generates the `scrypt` salt with a cryptographically secure random generator.
+  Thus in order to execute this attack, the tool itself (or the secure random generator) must be compromised,
+  and in either case it means the attacker has read-write access to the user-system,
+  in which case other more simpler attacks are possible.
+
 
 
 
