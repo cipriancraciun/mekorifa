@@ -1,3 +1,9 @@
 
-pub fn main () -> () {}
+
+use ::mekorifa;
+
+
+pub fn main () -> () {
+	mekorifa::main ()
+}
 
