@@ -354,6 +354,17 @@ envelope_checksum = blake3_envelope_hash
   However, given each authenticator or checksum includes a 512 bit token specific for that version,
   such a downgrade attack would not be possible, unless there is a bug in the tool itself.
 
+* ChaCha20 random key -- mitigated
+
+  The ChaCha20 specifies that random nonces are not acceptable
+  (due to high collision probability) for the same key.
+
+  However, (provided one doesn't reuse both the same password and the same `scrypt` salt),
+  given we use `script` to derive both the ChaCha20 key and nonce,
+  the probability of both being the same is astonishingly small.
+  (256 bits the key, plus 96 bits the nonce, both randomly generated,
+  thus, given how ChaCha20 is designed, we could say we have a 352 bits cryptographic key.)
+
 * ChaCha20 key and nonce reuse -- mitigated
 
   Given we use `scrypt` to derive all other cryptographic key material,
@@ -397,6 +408,7 @@ envelope_checksum = blake3_envelope_hash
 
 * AEAD -- Authenticated Encryption with Associated Data:
   * [RFC 5116 -- An Interface and Algorithms for Authenticated Encryption](<https://datatracker.ietf.org/doc/html/rfc5116>);
+  * [libsodium -- manual](<https://doc.libsodium.org/secret-key_cryptography/aead>);
 
 * Base64:
   * [Base64 -- Wikipedia](<https://en.wikipedia.org/wiki/Base64>);
