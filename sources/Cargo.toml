@@ -24,3 +24,14 @@ path = "./lib.rs"
 [features]
 default = []
 
+
+[dependencies]
+scrypt = "*"
+chacha20 = "*"
+blake3 = "*"
+ring = "*"
+zeroize = "*"
+nix = "*"
+serde = "*"
+serde_json = "*"
+
