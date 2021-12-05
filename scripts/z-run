@@ -16,6 +16,9 @@
 :: debug / build / bin :: exec -- "${ZRUN[@]}" ':: cargo / tool' build --bin mekorifa -- "${@}"
 :: release / build / bin :: exec -- "${ZRUN[@]}" ':: cargo / tool' build --bin mekorifa --release -- "${@}"
 
+:: debug / build / lib :: exec -- "${ZRUN[@]}" ':: cargo / tool' build --lib -- "${@}"
+:: release / build / lib :: exec -- "${ZRUN[@]}" ':: cargo / tool' build --lib --release -- "${@}"
+
 
 :: docs / crate / internals / build :: exec -- "${ZRUN[@]}" ':: cargo / tool' doc --lib --no-deps --document-private-items "${@}"
 :: docs / crate / exports / build :: exec -- "${ZRUN[@]}" ':: cargo / tool' doc --lib --no-deps "${@}"
