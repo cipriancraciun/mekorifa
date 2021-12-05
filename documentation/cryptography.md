@@ -142,7 +142,10 @@ Outputs:
 scrypt_s := bytes_random (64)    // 512 bits / 64 bytes
 
 // NOTE:  We make sure the password is a proper UTF8 string.
-password_bytes := utf8_encode (password)
+password_bytes := bytes_join ([
+        hex_decode ("d189ed7d155a5c47d3e6a99b66727a54bc9cde60a8f7061b2d563800292f5fc05f915bb0e676b17ae5ffb3ae29819e3511169a342862ff389ab131d26c708b92"),   // NOTE:  change in future versions
+        utf8_encode (password),
+    ])
 
 key_material_length := 32 + 12 + 32 + 32
 key_material := scrypt (password_bytes, scrypt_s, scrypt_n, scrypt_r, scrypt_p, key_material_length)
